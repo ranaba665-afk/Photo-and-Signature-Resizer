@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Photo & Signature Resizer – Exact KB for Exam Forms</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Sora:wght@500;700;800&display=swap">
+<style>
+:root{--bg:#EEF2F7;--panel:#fff;--ink:#0F1B2D;--mute:#5B6B80;--line:#CBD5E3;--acc:#1D4ED8;--accink:#fff;--ok:#12803F;--bad:#B93222;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1422;--panel:#142036;--ink:#E8EEF8;--mute:#93A3BB;--line:#2A3A55;--acc:#6D93FF;--accink:#08122A;--ok:#4CC27F;--bad:#FF8A78}}
+:root[data-theme="dark"]{--bg:#0C1422;--panel:#142036;--ink:#E8EEF8;--mute:#93A3BB;--line:#2A3A55;--acc:#6D93FF;--accink:#08122A;--ok:#4CC27F;--bad:#FF8A78}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Hind Siliguri",system-ui,sans-serif}
+main{max-width:560px;margin:0 auto;padding:22px 16px 40px}
+h1{font:800 clamp(26px,7vw,34px)/1.12 Sora,system-ui,sans-serif;margin:0 0 8px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin:0 0 20px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;border:2px solid var(--ink);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.tabs button{font:700 16px Sora,sans-serif;padding:12px;border:0;background:transparent;color:var(--ink);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.card h2{font:700 15px Sora,sans-serif;margin:0 0 10px}
+.drop{display:block;border:2px dashed var(--acc);border-radius:12px;padding:26px 12px;text-align:center;cursor:pointer;font-weight:600}
+.drop small{display:block;color:var(--mute);font-weight:400}
+input[type=file]{position:absolute;opacity:0;width:1px;height:1px}
+.drop:focus-within{outline:3px solid var(--acc);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chips button{font:600 15px "Hind Siliguri",sans-serif;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.chips button[aria-pressed="true"]{border-color:var(--acc);background:var(--acc);color:var(--accink)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:14px;color:var(--mute)}
+input[type=number]{width:100%;font:600 16px "Hind Siliguri",sans-serif;padding:10px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);margin-top:2px}
+button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.go{width:100%;font:700 17px Sora,sans-serif;padding:15px;border:0;border-radius:12px;background:var(--acc);color:var(--accink);cursor:pointer}
+.go:disabled{opacity:.45;cursor:not-allowed}
+#res{display:none}
+#res img{display:block;max-width:100%;max-height:300px;margin:0 auto 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.stat{font-weight:600;text-align:center;margin:0 0 4px}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.note{font-size:14px;color:var(--mute);text-align:center;margin:8px 0 0}
+.priv{font-size:14px;color:var(--mute);text-align:center;margin-top:18px}
+</style>
+</head>
+<body>
+<main>
+<h1>Photo &amp; Signature Resizer</h1>
+<p class="sub">Get your image under the exact KB limit for exam and job forms. Everything happens on your device; nothing is uploaded.</p>
+
+<div class="tabs" role="tablist">
+<button role="tab" id="t-photo" aria-selected="true">Photo</button>
+<button role="tab" id="t-sign" aria-selected="false">Signature</button>
+</div>
+
+<div class="card">
+<h2 id="h-up">1. Choose your photo</h2>
+<label class="drop"><span id="fname">Tap to select an image</span><small>JPG, PNG or WebP</small><input type="file" id="file" accept="image/*"></label>
+</div>
+
+<div class="card">
+<h2>2. Maximum file size</h2>
+<div class="chips" id="chips"></div>
+<label>Custom size (KB)<input type="number" id="kb" min="2" max="5000" inputmode="numeric"></label>
+</div>
+
+<div class="card">
+<h2>3. Width and height in pixels (optional)</h2>
+<div class="row">
+<label>Width<input type="number" id="w" min="20" max="4000" inputmode="numeric" placeholder="auto"></label>
+<label>Height<input type="number" id="h" min="20" max="4000" inputmode="numeric" placeholder="auto"></label>
+</div>
+</div>
+
+<button class="go" id="go" disabled>Resize image</button>
+
+<div class="card" id="res" style="margin-top:14px" aria-live="polite">
+<img id="prev" alt="Resized preview">
+<p class="stat" id="stat"></p>
+<p class="note" id="warn"></p>
+<button class="go" id="dl" style="margin-top:12px">Download JPG</button>
+<p class="note" id="hint"></p>
+</div>
+
+<p class="priv">Your image stays in this browser tab. Close the page and it is gone.</p>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const presets={photo:[20,50,100,200],sign:[10,20,30,50]};
+const defKB={photo:50,sign:20};
+let mode='photo',img=null,out=null,origSize=0,baseName='image';
+
+function chips(){
+  const box=$('#chips');box.innerHTML='';
+  presets[mode].forEach(v=>{
+    const b=document.createElement('button');b.textContent=v+' KB';
+    b.setAttribute('aria-pressed',String(+$('#kb').value===v));
+    b.onclick=()=>{$('#kb').value=v;chips()};
+    box.appendChild(b);
+  });
+}
+function setMode(m){
+  mode=m;
+  $('#t-photo').setAttribute('aria-selected',String(m==='photo'));
+  $('#t-sign').setAttribute('aria-selected',String(m==='sign'));
+  $('#h-up').textContent='1. Choose your '+(m==='photo'?'photo':'signature');
+  $('#kb').value=defKB[m];chips();
+}
+$('#t-photo').onclick=()=>setMode('photo');
+$('#t-sign').onclick=()=>setMode('sign');
+$('#kb').oninput=chips;
+setMode('photo');
+
+$('#file').onchange=e=>{
+  const f=e.target.files[0];if(!f)return;
+  origSize=f.size;baseName=f.name.replace(/\.[^.]+$/,'')||'image';
+  const i=new Image();
+  i.onload=()=>{img=i;$('#fname').textContent=f.name+' ('+fmt(f.size)+')';$('#go').disabled=false;$('#res').style.display='none'};
+  i.onerror=()=>{img=null;$('#go').disabled=true;$('#fname').textContent='This file could not be read. Try a JPG or PNG.'};
+  i.src=URL.createObjectURL(f);
+};
+const fmt=b=>b>=1048576?(b/1048576).toFixed(2)+' MB':(b/1024).toFixed(1)+' KB';
+const blobAt=(c,q)=>new Promise(r=>c.toBlob(r,'image/jpeg',q));
+
+async function fit(tKB,W,H){
+  const max=tKB*1024;let w=W||img.naturalWidth,h=H||img.naturalHeight;
+  if(!W&&Math.max(w,h)>1600){const s=1600/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s)}
+  let last=null;
+  for(let n=0;n<14;n++){
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(img,0,0,w,h);
+    const top=await blobAt(c,.95);
+    if(top.size<=max)return{blob:top,w,h};
+    let lo=.05,hi=.95,best=null;
+    for(let i=0;i<7;i++){const m=(lo+hi)/2,b=await blobAt(c,m);if(b.size<=max){best=b;lo=m}else hi=m}
+    if(best)return{blob:best,w,h};
+    last={blob:await blobAt(c,.05),w,h,over:true};
+    if(W&&H)return last;
+    w=Math.round(w*.85);h=Math.round(h*.85);
+  }
+  return last;
+}
+$('#go').onclick=async()=>{
+  const kb=+$('#kb').value;
+  if(!img||!kb||kb<2){alert('Enter a size of at least 2 KB.');return}
+  let W=Math.round(+$('#w').value)||0,H=Math.round(+$('#h').value)||0;
+  if(W&&!H)H=Math.round(W*img.naturalHeight/img.naturalWidth);
+  if(H&&!W)W=Math.round(H*img.naturalWidth/img.naturalHeight);
+  $('#go').disabled=true;$('#go').textContent='Resizing…';
+  try{out=await fit(kb,W,H)}catch(e){out=null}
+  $('#go').disabled=false;$('#go').textContent='Resize image';
+  if(!out){alert('Could not resize this image. Try another file.');return}
+  const size=out.blob.size,okay=size<=kb*1024;
+  $('#prev').src=URL.createObjectURL(out.blob);
+  $('#stat').innerHTML=fmt(origSize)+' → <span class="'+(okay?'ok':'bad')+'">'+fmt(size)+'</span> · '+out.w+'×'+out.h+' px';
+  $('#warn').textContent=okay?'':'Could not reach '+kb+' KB at this pixel size. Try a smaller width and height, or clear them.';
+  $('#res').style.display='block';
+  $('#res').scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+$('#dl').onclick=async()=>{
+  if(!out)return;
+  const name=baseName+'-'+Math.round(out.blob.size/1024)+'kb.jpg';
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(out.blob);a.download=name;
+  document.body.appendChild(a);a.click();a.remove();
+  $('#hint').textContent='If the download did not start, press and hold the image above and choose Save image.';
+};
+</script>
+</body>
+</html>
