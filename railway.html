@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Railway (RRB) Photo &amp; Signature Resizer – Compress to KB</title><meta name="description" content="Compress your photo and signature for Railway recruitment forms to the size your notice asks for."><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Sora:wght@500;700;800&display=swap"><link rel="stylesheet" href="/style.css"></head><body><main><nav class="top"><a href="/">Home</a><a href="/ssc">SSC</a><a href="/railway">Railway</a><a href="/bank">Bank</a><a href="/photo-20kb">Photo 20KB</a><a href="/signature-20kb">Signature 20KB</a></nav><h1>Railway Exam Photo &amp; Signature Resizer</h1><p class="sub">Compress your photo and signature for Railway recruitment forms to the size your notice asks for.</p><div class="tabs" role="tablist">
+<button role="tab" id="t-photo" aria-selected="true">Photo</button>
+<button role="tab" id="t-sign" aria-selected="false">Signature</button>
+</div>
+
+<div class="card">
+<h2 id="h-up">1. Choose your photo</h2>
+<label class="drop"><span id="fname">Tap to select an image</span><small>JPG, PNG or WebP</small><input type="file" id="file" accept="image/*"></label>
+</div>
+
+<div class="card">
+<h2>2. Maximum file size</h2>
+<div class="chips" id="chips"></div>
+<label>Custom size (KB)<input type="number" id="kb" min="2" max="5000" inputmode="numeric"></label>
+</div>
+
+<div class="card">
+<h2>3. Width and height in pixels (optional)</h2>
+<div class="row">
+<label>Width<input type="number" id="w" min="20" max="4000" inputmode="numeric" placeholder="auto"></label>
+<label>Height<input type="number" id="h" min="20" max="4000" inputmode="numeric" placeholder="auto"></label>
+</div>
+</div>
+
+<button class="go" id="go" disabled>Resize image</button>
+
+<div class="card" id="res" style="margin-top:14px" aria-live="polite">
+<img id="prev" alt="Resized preview">
+<p class="stat" id="stat"></p>
+<p class="note" id="warn"></p>
+<button class="go" id="dl" style="margin-top:12px">Download JPG</button>
+<p class="note" id="hint"></p>
+</div>
+
+<p class="priv">Your image stays in this browser tab. Close the page and it is gone.</p><section class="guide"><h2>How it works</h2><p>Railway recruitment forms check the size of every upload and reject files outside the allowed range. Set your limit below and download a ready JPG.</p><p>Scan or photograph your signature on plain white paper. Switch to the Signature tab, choose a small size, and check the preview before you download.</p><p><strong>Always follow the exact size and format written in your official notification. Limits differ between exams and years.</strong></p><h2>Common questions</h2><details><summary>Where do I find the Railway photo size limit?</summary><p>It is printed in the official recruitment notification, usually under the online application instructions.</p></details><details><summary>Will resizing blur my photo?</summary><p>The tool keeps quality as high as possible while staying under your KB limit. Very small limits will reduce sharpness.</p></details><details><summary>Does it work offline?</summary><p>After the page loads once, the resizing itself runs on your device, but keep a connection for the first load.</p></details></section><footer><a href="/about">About</a><a href="/privacy">Privacy Policy</a><a href="/contact">Contact</a></footer></main><script>window.PAGE={mode:"photo",kb:50};</script><script src="/app.js"></script></body></html>
